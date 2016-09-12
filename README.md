@@ -9,7 +9,7 @@ This is a simple program, much like netcat or telnet, that sets up pipes between
 For now, use `go get` to install it:
 
 ```
-go get -u github.com/jbenet/ma-pipe/ma-pipe
+go get -u github.com/multiformats/ma-pipe/ma-pipe
 ma-pipe --version # should work
 ```
 

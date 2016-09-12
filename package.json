@@ -1,10 +1,10 @@
 {
   "author": "earth",
   "bugs": {
-    "url": "github.com/jbenet/ma-pipe"
+    "url": "github.com/multiformats/ma-pipe"
   },
   "gx": {
-    "dvcsimport": "github.com/jbenet/ma-pipe"
+    "dvcsimport": "github.com/multiformats/ma-pipe"
   },
   "gxDependencies": [
     {
