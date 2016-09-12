@@ -10,7 +10,7 @@ import (
 
 	ma "gx/ipfs/QmTYjPMCKGzhpfevCCu7j5rWDKRkVqQ1jusMM5HhyGEzD4/go-multiaddr"
 
-	mapipe "github.com/jbenet/ma-pipe"
+	mapipe "github.com/multiformats/ma-pipe"
 )
 
 const VERSION = "1.0.0"
