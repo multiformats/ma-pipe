@@ -15,34 +15,37 @@ import (
 const VERSION = "1.0.0"
 
 const USAGE = `USAGE
-  ma-pipe <mode> <multiaddrs>...
+	ma-pipe <mode> <multiaddrs>...
 
-  ma-pipe listen <listen-multiaddr1> <listen-multiaddr2>
-  ma-pipe dial <dial-multiaddr1> <dial-multiaddr2>
-  ma-pipe fwd <listen-multiaddr> <dial-multiaddr>
-  ma-pipe proxy <listen-multiaddr>
+	ma-pipe listen <listen-multiaddr1> <listen-multiaddr2>
+	ma-pipe dial <dial-multiaddr1> <dial-multiaddr2>
+	ma-pipe fwd <listen-multiaddr> <dial-multiaddr>
+	ma-pipe proxy <listen-multiaddr>
 
 OPTIONS
-  -h, --help          display this help message
-  -v, --version       display the version of the program
-  -t, --trace <dir>   save a trace of the connection to <dir>
+	-h, --help          display this help message
+	-v, --version       display the version of the program
+	-t, --trace <dir>   save a trace of the connection to <dir>
 
 EXAMPLES
-  # listen on two multiaddrs, accept 1 conn each, and pipe them
-  ma-pipe listen /ip4/127.0.0.1/tcp/1234 /ip4/127.0.0.1/tcp/1234
+	# listen on two multiaddrs, accept 1 conn each, and pipe them
+	ma-pipe listen /ip4/127.0.0.1/tcp/1234 /ip4/127.0.0.1/tcp/1234
 
-  # dial to both multiaddrs, and pipe them
-  ma-pipe dial /ip4/127.0.0.1/tcp/1234 /ip4/127.0.0.1/tcp/1234
+	# dial to both multiaddrs, and pipe them
+	ma-pipe dial /ip4/127.0.0.1/tcp/1234 /ip4/127.0.0.1/tcp/1234
 
-  # listen on one multiaddr, accept 1 conn, dial to the other, and pipe them
-  ma-pipe fwd /ip4/127.0.0.1/tcp/1234 /ip4/127.0.0.1/tcp/1234
+	# listen on one multiaddr, accept 1 conn, dial to the other, and pipe them
+	ma-pipe fwd /ip4/127.0.0.1/tcp/1234 /ip4/127.0.0.1/tcp/1234
 
-  # listen on one multiaddr, accept 1 conn.
-  # read the first line, parse a multiaddr, dial that multiaddr, and pipe them
-  ma-pipe proxy /ip4/127.0.0.1/tcp/1234
+	# listen on one multiaddr, accept 1 conn.
+	# read the first line, parse a multiaddr, dial that multiaddr, and pipe them
+	ma-pipe proxy /ip4/127.0.0.1/tcp/1234
 
-  # ma-pipe supports the /unix/stdio multiaddr
-  ma-pipe fwd /unix/stdio /ip4/127.0.0.1/tcp/1234
+	# ma-pipe supports "zero" listen multiaddrs
+	ma-pipe proxy /ip4/0.0.0.0/tcp/0
+
+	# ma-pipe supports the /unix/stdio multiaddr
+	ma-pipe fwd /unix/stdio /ip4/127.0.0.1/tcp/1234
 `
 
 type Opts struct {
