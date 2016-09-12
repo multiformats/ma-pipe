@@ -65,9 +65,30 @@ EXAMPLES
 
 	# ma-pipe supports the /unix/stdio multiaddr
 	ma-pipe fwd /unix/stdio /ip4/127.0.0.1/tcp/1234
+
+	# ma-pipe supports the --tee option to inspect conn in stdio
+	ma-pipe --tee fwd /ip4/0.0.0.0/tcp/0 /ip4/127.0.0.1/tcp/1234
 ```
 
-### Traces
+### Tee (`--tee`)
+
+The `-e, --tee` option allows the user to inspect the connection in stdio, as it happens.
+
+```sh
+> ma-pipe --tee listen /ip4/127.0.0.1/tcp/64829 /ip4/127.0.0.1/tcp/64830
+# listening on /ip4/127.0.0.1/tcp/64829
+# listening on /ip4/127.0.0.1/tcp/64830
+# accepted /ip4/127.0.0.1/tcp/64830 /ip4/127.0.0.1/tcp/64853
+# accepted /ip4/127.0.0.1/tcp/64829 /ip4/127.0.0.1/tcp/64855
+# piping /ip4/127.0.0.1/tcp/64853 to /ip4/127.0.0.1/tcp/64855
+> Hello there
+< Hi!
+> How's it going?
+< Well, and you?
+```
+
+
+### Traces (`--trace`)
 
 The `-t, --trace` option allows the user to specify a directory to capture a trace of the connection. Three files will be written:
 

@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"io"
 	"os"
 
 	ma "gx/ipfs/QmTYjPMCKGzhpfevCCu7j5rWDKRkVqQ1jusMM5HhyGEzD4/go-multiaddr"
@@ -26,6 +27,7 @@ OPTIONS
 	-h, --help          display this help message
 	-v, --version       display the version of the program
 	-t, --trace <dir>   save a trace of the connection to <dir>
+	-e, --tee           tee the connection to stdio
 
 EXAMPLES
 	# listen on two multiaddrs, accept 1 conn each, and pipe them
@@ -46,12 +48,16 @@ EXAMPLES
 
 	# ma-pipe supports the /unix/stdio multiaddr
 	ma-pipe fwd /unix/stdio /ip4/127.0.0.1/tcp/1234
+
+	# ma-pipe supports the --tee option to inspect conn in stdio
+	ma-pipe --tee fwd /ip4/0.0.0.0/tcp/0 /ip4/127.0.0.1/tcp/1234
 `
 
 type Opts struct {
 	Mode    string
 	Trace   string
 	Version bool
+	Tee     bool
 	Addrs   []ma.Multiaddr
 }
 
@@ -63,6 +69,8 @@ func parseArgs() (Opts, error) {
 	flag.BoolVar(&o.Version, "version", false, "")
 	flag.StringVar(&o.Trace, "t", "", "")
 	flag.StringVar(&o.Trace, "trace", "", "")
+	flag.BoolVar(&o.Tee, "e", false, "")
+	flag.BoolVar(&o.Tee, "tee", false, "")
 	flag.Usage = func() {
 		fmt.Print(USAGE)
 	}
@@ -139,6 +147,12 @@ func run() error {
 			BW: ioutil.Discard,
 		}
 
+		if opts.Tee {
+			trace.CW = NewPrefixWriter(os.Stderr, "# ")
+			trace.AW = NewPrefixWriter(os.Stdout, "> ")
+			trace.BW = NewPrefixWriter(os.Stdout, "< ")
+		}
+
 		if opts.Trace != "" {
 			err := mapipe.OpenTraceFiles(trace, opts.Trace)
 			if err != nil {
@@ -166,4 +180,34 @@ func main() {
 		fmt.Fprintf(os.Stderr, "error: %s\n", err)
 		os.Exit(1)
 	}
+}
+
+
+type PrefixWriter struct {
+	W      io.Writer
+	Prefix []byte
+}
+
+func NewPrefixWriter(W io.Writer, pre string) *PrefixWriter {
+	return &PrefixWriter{W, []byte(pre)}
+}
+
+func (pw *PrefixWriter) Write(buf []byte) (int, error) {
+	buf = append(pw.Prefix, buf...)
+	n, err := pw.W.Write(buf)
+
+	// have to remove the length
+	n = n - len(pw.Prefix)
+	if n < 0 {
+		n = 0
+	}
+
+	return n, err
+}
+
+func (pw *PrefixWriter) Close() (error) {
+	if c, ok := pw.W.(io.Closer); ok {
+		return c.Close()
+	}
+	return nil
 }
