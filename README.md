@@ -1,8 +1,23 @@
 # ma-pipe - multiaddr pipes
 
+[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
+[![](https://img.shields.io/badge/project-multiformats-blue.svg?style=flat-square)](http://github.com/multiformats/multiformats)
+[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)
+
 > multiaddr powered pipes
 
-This is a simple program, much like netcat or telnet, that sets up pipes between multiaddrs.
+This is a simple program, much like netcat or telnet, that sets up pipes between [multiaddrs](https://github.com/multiformats/multiaddr).
+
+## Table of Contents
+
+- [Install](#install)
+- [Usage](#usage)
+  - [CLI Usage Text](#cli-usage-text)
+  - [Tee (`--tee`)](#tee---tee)
+  - [Traces (`--trace`)](#traces---trace)
+- [Maintainer](#maintainer)
+- [Contribute](#contribute)
+- [License](#license)
 
 ## Install
 
@@ -104,6 +119,18 @@ mytraces
 └── ma-pipe-trace-2016-09-12-03:35:31Z-14088-ctl
 ```
 
+## Maintainer
+
+Captain: [@jbenet](https://github.com/jbenet).
+
+## Contribute
+
+Contributions welcome. Please check out [the issues](https://github.com/multiformats/ma-pipe/issues).
+
+Check out our [contributing document](https://github.com/multiformats/multiformats/blob/master/contributing.md) for more information on how we work, and about contributing in general. Please be aware that all interactions related to multiformats are subject to the IPFS [Code of Conduct](https://github.com/ipfs/community/blob/master/code-of-conduct.md).
+
+Small note: If editing the Readme, please conform to the [standard-readme](https://github.com/RichardLitt/standard-readme) specification.
+
 ## License
 
-MIT
+[MIT](LICENSE)
