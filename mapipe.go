@@ -5,25 +5,29 @@ import (
 	"fmt"
 	"io"
 
-	manet "gx/ipfs/QmP9wr7cpzyY76Tmpvcfe9vp2eMa1a3bVKA27wxPBBxez7/go-multiaddr-net"
-	ma "gx/ipfs/QmTYjPMCKGzhpfevCCu7j5rWDKRkVqQ1jusMM5HhyGEzD4/go-multiaddr"
+	manet "github.com/multiformats/go-multiaddr-net"
+	ma "github.com/multiformats/go-multiaddr"
 )
 
-func pipeConn(a, b manet.Conn, t *Trace) error {
+type Opts struct {
+	Trace *Trace // trace object
+}
+
+func pipeConn(a, b manet.Conn, o Opts) error {
 	if a == nil || b == nil {
 		return errors.New("attempt to pipe nil manet.Conn")
 	}
 
-	fmt.Fprintln(t.CW, "piping", a.RemoteMultiaddr(), "to", b.RemoteMultiaddr())
+	fmt.Fprintln(o.Trace.CW, "piping", a.RemoteMultiaddr(), "to", b.RemoteMultiaddr())
 	errs := make(chan error, 2)
 
 	go func() {
-		_, err := io.Copy(io.MultiWriter(a, t.AW), b)
+		_, err := io.Copy(io.MultiWriter(a, o.Trace.AW), b)
 		errs <- err
 	}()
 
 	go func() {
-		_, err := io.Copy(io.MultiWriter(b, t.BW), a)
+		_, err := io.Copy(io.MultiWriter(b, o.Trace.BW), a)
 		errs <- err
 	}()
 
@@ -43,19 +47,19 @@ type ConnErr struct {
 
 // ListenPipe listens on both multiaddrs, accepts one connection each,
 // and pipes them to each other.
-func ListenPipe(l1, l2 ma.Multiaddr, t *Trace) error {
+func ListenPipe(l1, l2 ma.Multiaddr, o Opts) error {
 
 	list1, err := Listen(l1)
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(t.CW, "listening on", list1.Multiaddr())
+	fmt.Fprintln(o.Trace.CW, "listening on", list1.Multiaddr())
 
 	list2, err := Listen(l2)
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(t.CW, "listening on", list2.Multiaddr())
+	fmt.Fprintln(o.Trace.CW, "listening on", list2.Multiaddr())
 
 	conns := make(chan ConnErr, 2)
 	acceptOneThenClose := func(l manet.Listener) {
@@ -68,9 +72,9 @@ func ListenPipe(l1, l2 ma.Multiaddr, t *Trace) error {
 	go acceptOneThenClose(list2)
 
 	c1 := <-conns
-	fmt.Fprintln(t.CW, "accepted", c1.Conn.LocalMultiaddr(), c1.Conn.RemoteMultiaddr())
+	fmt.Fprintln(o.Trace.CW, "accepted", c1.Conn.LocalMultiaddr(), c1.Conn.RemoteMultiaddr())
 	c2 := <-conns
-	fmt.Fprintln(t.CW, "accepted", c2.Conn.LocalMultiaddr(), c2.Conn.RemoteMultiaddr())
+	fmt.Fprintln(o.Trace.CW, "accepted", c2.Conn.LocalMultiaddr(), c2.Conn.RemoteMultiaddr())
 
 	defer func() {
 		if c1.Conn != nil {
@@ -89,17 +93,17 @@ func ListenPipe(l1, l2 ma.Multiaddr, t *Trace) error {
 		return c2.Err
 	}
 
-	return pipeConn(c1.Conn, c2.Conn, t)
+	return pipeConn(c1.Conn, c2.Conn, o)
 }
 
 // ForwardPipe listens on one multiaddr, accepts one connection,
 // dials to the second multiaddr, and pipes them to each other.
-func ForwardPipe(l, d ma.Multiaddr, t *Trace) error {
+func ForwardPipe(l, d ma.Multiaddr, o Opts) error {
 	list, err := Listen(l)
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(t.CW, "listening on", list.Multiaddr())
+	fmt.Fprintln(o.Trace.CW, "listening on", list.Multiaddr())
 
 	c1, err := list.Accept()
 	list.Close()
@@ -107,48 +111,48 @@ func ForwardPipe(l, d ma.Multiaddr, t *Trace) error {
 		return err
 	}
 	defer c1.Close()
-	fmt.Fprintln(t.CW, "accepted", c1.LocalMultiaddr(), c1.RemoteMultiaddr())
+	fmt.Fprintln(o.Trace.CW, "accepted", c1.LocalMultiaddr(), c1.RemoteMultiaddr())
 
-	fmt.Fprintln(t.CW, "dialing", d)
+	fmt.Fprintln(o.Trace.CW, "dialing", d)
 	c2, err := Dial(d)
 	if err != nil {
 		return err
 	}
 	defer c2.Close()
-	fmt.Fprintln(t.CW, "dialed", c2.LocalMultiaddr(), c2.RemoteMultiaddr())
+	fmt.Fprintln(o.Trace.CW, "dialed", c2.LocalMultiaddr(), c2.RemoteMultiaddr())
 
-	return pipeConn(c1, c2, t)
+	return pipeConn(c1, c2, o)
 }
 
 // DialPipe dials to both multiaddrs, and pipes them to each other.
-func DialPipe(d1, d2 ma.Multiaddr, t *Trace) error {
-	fmt.Fprintln(t.CW, "dialing", d1)
-	fmt.Fprintln(t.CW, "dialing", d2)
+func DialPipe(d1, d2 ma.Multiaddr, o Opts) error {
+	fmt.Fprintln(o.Trace.CW, "dialing", d1)
+	fmt.Fprintln(o.Trace.CW, "dialing", d2)
 
 	c1, err := Dial(d1)
 	if err != nil {
 		return err
 	}
 	defer c1.Close()
-	fmt.Fprintln(t.CW, "dialed", c1.LocalMultiaddr(), c1.RemoteMultiaddr())
+	fmt.Fprintln(o.Trace.CW, "dialed", c1.LocalMultiaddr(), c1.RemoteMultiaddr())
 
 	c2, err := Dial(d2)
 	if err != nil {
 		return err
 	}
 	defer c2.Close()
-	fmt.Fprintln(t.CW, "dialed", c2.LocalMultiaddr(), c2.RemoteMultiaddr())
+	fmt.Fprintln(o.Trace.CW, "dialed", c2.LocalMultiaddr(), c2.RemoteMultiaddr())
 
-	return pipeConn(c1, c2, t)
+	return pipeConn(c1, c2, o)
 }
 
 // ProxyPipe listens on one multiaddr, reads a multiaddr, dials it, pipes them.
-func ProxyPipe(l ma.Multiaddr, t *Trace) error {
+func ProxyPipe(l ma.Multiaddr, o Opts) error {
 	list, err := Listen(l)
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(t.CW, "listening on", list.Multiaddr())
+	fmt.Fprintln(o.Trace.CW, "listening on", list.Multiaddr())
 
 	c1, err := list.Accept()
 	list.Close()
@@ -156,24 +160,24 @@ func ProxyPipe(l ma.Multiaddr, t *Trace) error {
 		return err
 	}
 	defer c1.Close()
-	fmt.Fprintln(t.CW, "accepted", c1.LocalMultiaddr(), c1.RemoteMultiaddr())
+	fmt.Fprintln(o.Trace.CW, "accepted", c1.LocalMultiaddr(), c1.RemoteMultiaddr())
 
 	// read until the first newline.
 	d, err := readMultiaddr(c1)
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(t.CW, "requested proxy to", d)
+	fmt.Fprintln(o.Trace.CW, "requested proxy to", d)
 
-	fmt.Fprintln(t.CW, "dialing", d)
+	fmt.Fprintln(o.Trace.CW, "dialing", d)
 	c2, err := Dial(d)
 	if err != nil {
 		return err
 	}
 	defer c2.Close()
-	fmt.Fprintln(t.CW, "dialed", c2.LocalMultiaddr(), c2.RemoteMultiaddr())
+	fmt.Fprintln(o.Trace.CW, "dialed", c2.LocalMultiaddr(), c2.RemoteMultiaddr())
 
-	return pipeConn(c1, c2, t)
+	return pipeConn(c1, c2, o)
 }
 
 func readMultiaddr(r io.Reader) (ma.Multiaddr, error) {

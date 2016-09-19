@@ -8,7 +8,7 @@ import (
 	"io"
 	"os"
 
-	ma "gx/ipfs/QmTYjPMCKGzhpfevCCu7j5rWDKRkVqQ1jusMM5HhyGEzD4/go-multiaddr"
+	ma "github.com/multiformats/go-multiaddr"
 
 	mapipe "github.com/multiformats/ma-pipe"
 )
@@ -104,30 +104,32 @@ func parseArgs() (Opts, error) {
 }
 
 func runMode(trace *mapipe.Trace, opts Opts) error {
+	o := mapipe.Opts{trace}
+
 	switch opts.Mode {
 	case "listen":
 		if len(opts.Addrs) != 2 {
 			return errors.New("listen mode takes exactly 2 multiaddrs")
 		} else {
-			return mapipe.ListenPipe(opts.Addrs[0], opts.Addrs[1], trace)
+			return mapipe.ListenPipe(opts.Addrs[0], opts.Addrs[1], o)
 		}
 	case "dial":
 		if len(opts.Addrs) != 2 {
 			return errors.New("dial mode takes exactly 2 multiaddrs")
 		} else {
-			return mapipe.DialPipe(opts.Addrs[0], opts.Addrs[1], trace)
+			return mapipe.DialPipe(opts.Addrs[0], opts.Addrs[1], o)
 		}
 	case "fwd":
 		if len(opts.Addrs) != 2 {
 			return errors.New("fwd mode takes exactly 2 multiaddrs")
 		} else {
-			return mapipe.ForwardPipe(opts.Addrs[0], opts.Addrs[1], trace)
+			return mapipe.ForwardPipe(opts.Addrs[0], opts.Addrs[1], o)
 		}
 	case "proxy":
 		if len(opts.Addrs) != 1 {
 			return errors.New("proxy mode takes exactly 1 multiaddr")
 		}
-		return mapipe.ProxyPipe(opts.Addrs[0], trace)
+		return mapipe.ProxyPipe(opts.Addrs[0], o)
 	}
 	return nil
 }

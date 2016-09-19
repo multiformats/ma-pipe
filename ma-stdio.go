@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
-	manet "gx/ipfs/QmP9wr7cpzyY76Tmpvcfe9vp2eMa1a3bVKA27wxPBBxez7/go-multiaddr-net"
-	ma "gx/ipfs/QmTYjPMCKGzhpfevCCu7j5rWDKRkVqQ1jusMM5HhyGEzD4/go-multiaddr"
+	manet "github.com/multiformats/go-multiaddr-net"
+	ma "github.com/multiformats/go-multiaddr"
 )
 
 var StdioMultiaddr = ma.StringCast("/unix/stdio")
