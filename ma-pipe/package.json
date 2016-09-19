@@ -14,15 +14,27 @@
       "version": "0.0.0"
     },
     {
+      "author": "whyrusleeping",
+      "hash": "QmYf7ng2hG5XBtJA3tN34DQ2GUN5HNksEw1rLDkmr6vGku",
+      "name": "go-multihash",
+      "version": "0.0.0"
+    },
+    {
       "author": "multiformats",
-      "hash": "QmcKALStaqLfhqPSxwWZW1ydZK7YJtfEtXvjhYmifrFoFN",
+      "hash": "QmPKdDoHQdCyo6PjSWvSHF2p9q6svSL6zGC7kfV226V9Pc",
       "name": "go-multiaddr-net",
       "version": "1.4.0"
     },
     {
       "author": "jbenet",
-      "hash": "QmfZmQJ7J3MeBChAdcYfgDAWfbqjMU75bdLcmpD3TEhSZ1",
+      "hash": "QmSFsUAmvbFuQvTCotbb5Ev2tAXDM6fihYY4HAB4gxGYnD",
       "name": "go-multiaddr",
+      "version": "0.0.0"
+    },
+    {
+      "author": "dustin",
+      "hash": "QmPSBJL4momYnE7DcUyk2DVhD6rH488ZmHBGLbxNdhU44K",
+      "name": "go-humanize",
       "version": "0.0.0"
     }
   ],
