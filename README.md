@@ -15,6 +15,7 @@ This is a simple program, much like netcat or telnet, that sets up pipes between
   - [CLI Usage Text](#cli-usage-text)
   - [Tee (`--tee`)](#tee---tee)
   - [Traces (`--trace`)](#traces---trace)
+  - [Rate Limiting (`--bandwidth`)](#rate-limiting-bandwidth)
 - [Maintainer](#maintainer)
 - [Contribute](#contribute)
 - [License](#license)
@@ -57,9 +58,11 @@ USAGE
 	ma-pipe proxy <listen-multiaddr>
 
 OPTIONS
-	-h, --help          display this help message
-	-v, --version       display the version of the program
-	-t, --trace <dir>   save a trace of the connection to <dir>
+	-h, --help               display this help message
+	-v, --version            display the version of the program
+	-t, --trace <dir>        save a trace of the connection to <dir>
+	-e, --tee                tee the connection to stdio
+	--bandwidth <bandwidth>  introduce a bandwidth cap (eg 1MB/s)
 
 EXAMPLES
 	# listen on two multiaddrs, accept 1 conn each, and pipe them
@@ -83,6 +86,10 @@ EXAMPLES
 
 	# ma-pipe supports the --tee option to inspect conn in stdio
 	ma-pipe --tee fwd /ip4/0.0.0.0/tcp/0 /ip4/127.0.0.1/tcp/1234
+
+	# ma-pipe allows throttling connections with a bandwidth max
+	ma-pipe --bandwidth 1MB/s listen /ip4/127.0.0.1/tcp/1234 /ip4/127.0.0.1/tcp/1234
+
 ```
 
 ### Tee (`--tee`)
@@ -117,6 +124,20 @@ mytraces
 ├── ma-pipe-trace-2016-09-12-03:35:31Z-14088-a2b
 ├── ma-pipe-trace-2016-09-12-03:35:31Z-14088-b2a
 └── ma-pipe-trace-2016-09-12-03:35:31Z-14088-ctl
+```
+
+### Rate Limiting (`--bandwidth`)
+
+The `--bandwidth` option allows users to specify rate-limiting through a maximum bandwidth. The flag uses [go-humanize](https://github.com/dustin/go-humanize) to read formats like `1MB/s` and `4Bps`.
+
+```
+> time head -c 16777216 /dev/urandom | ./ma-pipe --bandwidth 1MB/s fwd /unix/stdio /ip4/127.0.0.1/tcp/5432
+...
+./ma-pipe --bandwidth 1MB/s fwd /unix/stdio /ip4/127.0.0.1/tcp/5432  0.09s user 0.39s system 2% cpu 16.056 total
+
+> time head -c 16777216 /dev/urandom | ./ma-pipe --bandwidth 4MB/s fwd /unix/stdio /ip4/127.0.0.1/tcp/5432
+...
+./ma-pipe --bandwidth 4MB/s fwd /unix/stdio /ip4/127.0.0.1/tcp/5432  0.20s user 0.37s system 14% cpu 4.062 total
 ```
 
 ## Maintainer
