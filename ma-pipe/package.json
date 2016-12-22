@@ -21,13 +21,13 @@
     },
     {
       "author": "multiformats",
-      "hash": "QmPKdDoHQdCyo6PjSWvSHF2p9q6svSL6zGC7kfV226V9Pc",
+      "hash": "QmT6Cp31887FpAc25z25YHgpFJohZedrYLWPPspRtj1Brp",
       "name": "go-multiaddr-net",
       "version": "1.4.0"
     },
     {
       "author": "jbenet",
-      "hash": "QmSFsUAmvbFuQvTCotbb5Ev2tAXDM6fihYY4HAB4gxGYnD",
+      "hash": "QmUAQaWbKxGCUTuoQVvvicbQNZ9APF5pDGWyAZSe93AtKH",
       "name": "go-multiaddr",
       "version": "0.0.0"
     },
