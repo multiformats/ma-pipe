@@ -1,8 +1,11 @@
 # ma-pipe - multiaddr pipes
 
 [![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
-[![](https://img.shields.io/badge/project-multiformats-blue.svg?style=flat-square)](http://github.com/multiformats/multiformats)
-[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)
+[![](https://img.shields.io/badge/project-multiformats-blue.svg?style=flat-square)](https://github.com/multiformats/multiformats)
+[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](https://webchat.freenode.net/?channels=%23ipfs)
+[![](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
+[![Travis CI](https://img.shields.io/travis/multiformats/ma-pipe.svg?style=flat-square&branch=master)](https://travis-ci.org/multiformats/ma-pipe)
+[![codecov.io](https://img.shields.io/codecov/c/github/multiformats/ma-pipe.svg?style=flat-square&branch=master)](https://codecov.io/github/multiformats/ma-pipe?branch=master)
 
 > multiaddr powered pipes
 
@@ -140,7 +143,7 @@ The `--bandwidth` option allows users to specify rate-limiting through a maximum
 ./ma-pipe --bandwidth 4MB/s fwd /unix/stdio /ip4/127.0.0.1/tcp/5432  0.20s user 0.37s system 14% cpu 4.062 total
 ```
 
-## Maintainer
+## Maintainers
 
 Captain: [@jbenet](https://github.com/jbenet).
 
@@ -150,8 +153,8 @@ Contributions welcome. Please check out [the issues](https://github.com/multifor
 
 Check out our [contributing document](https://github.com/multiformats/multiformats/blob/master/contributing.md) for more information on how we work, and about contributing in general. Please be aware that all interactions related to multiformats are subject to the IPFS [Code of Conduct](https://github.com/ipfs/community/blob/master/code-of-conduct.md).
 
-Small note: If editing the Readme, please conform to the [standard-readme](https://github.com/RichardLitt/standard-readme) specification.
+Small note: If editing the README, please conform to the [standard-readme](https://github.com/RichardLitt/standard-readme) specification.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) © 2016 Protocol Labs Inc.
