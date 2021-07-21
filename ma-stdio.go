@@ -7,18 +7,20 @@ import (
 	"os"
 	"time"
 
-	manet "github.com/multiformats/go-multiaddr-net"
 	ma "github.com/multiformats/go-multiaddr"
+	manet "github.com/multiformats/go-multiaddr/net"
 )
 
-var StdioMultiaddr = ma.StringCast("/unix/stdio")
-var ProcStdioListener = StdioListener{}
-var ProcStdioConn = IOConn{
-	R:     os.Stdin,
-	W:     os.Stdout,
-	LAddr: StdioMultiaddr,
-	RAddr: StdioMultiaddr,
-}
+var (
+	StdioMultiaddr    = ma.StringCast("/unix/stdio")
+	ProcStdioListener = StdioListener{}
+	ProcStdioConn     = IOConn{
+		R:     os.Stdin,
+		W:     os.Stdout,
+		LAddr: StdioMultiaddr,
+		RAddr: StdioMultiaddr,
+	}
+)
 
 func Listen(a ma.Multiaddr) (manet.Listener, error) {
 	if StdioMultiaddr.Equal(a) {
@@ -89,7 +91,7 @@ func (c *IOConn) Close() (err error) {
 	if wc, ok := c.W.(io.Closer); ok {
 		err = wc.Close()
 	}
-	return nil
+	return
 }
 
 func (c *IOConn) LocalAddr() net.Addr                { return nil }

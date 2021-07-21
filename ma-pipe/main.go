@@ -1,27 +1,25 @@
 package main
 
 import (
+	cxt "context"
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/signal"
 	"syscall"
-	cxt "context"
 
 	ma "github.com/multiformats/go-multiaddr"
 	mapipe "github.com/multiformats/ma-pipe"
 
-	humanize "gx/ipfs/QmPSBJL4momYnE7DcUyk2DVhD6rH488ZmHBGLbxNdhU44K/go-humanize"
+	"github.com/dustin/go-humanize"
 )
 
 const VERSION = "1.0.0"
 
-var (
-	ErrInvalidBandwidth = errors.New("Invalid bandwidth. Must of the form: 10MBps, 1Kbps, 1GB/s, ...")
-)
+var ErrInvalidBandwidth = errors.New("invalid bandwidth. Must of the form: 10MBps, 1Kbps, 1GB/s, ... ")
 
 const USAGE = `USAGE
 	ma-pipe <mode> <multiaddrs>...
@@ -76,7 +74,6 @@ type Opts struct {
 }
 
 func parseArgs() (Opts, error) {
-
 	// parse options
 	o := Opts{Mode: "exit"}
 	flag.BoolVar(&o.Version, "v", false, "")
@@ -139,7 +136,7 @@ func ParseBandwidth(s string) (uint64, error) {
 	if s[len(s)-2] != '/' && s[len(s)-2] != 'p' {
 		return 0, ErrInvalidBandwidth
 	}
-	return humanize.ParseBytes(s[0:len(s)-2])
+	return humanize.ParseBytes(s[0 : len(s)-2])
 }
 
 func catchSigPipe(ctx cxt.Context, trace *mapipe.Trace) cxt.Context {
@@ -237,7 +234,6 @@ func main() {
 	}
 }
 
-
 type PrefixWriter struct {
 	W      io.Writer
 	Prefix []byte
@@ -260,7 +256,7 @@ func (pw *PrefixWriter) Write(buf []byte) (int, error) {
 	return n, err
 }
 
-func (pw *PrefixWriter) Close() (error) {
+func (pw *PrefixWriter) Close() error {
 	if c, ok := pw.W.(io.Closer); ok {
 		return c.Close()
 	}
