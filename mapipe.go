@@ -1,13 +1,13 @@
 package mapipe
 
 import (
+	cxt "context"
 	"errors"
 	"fmt"
 	"io"
-	cxt "context"
 
-	manet "github.com/multiformats/go-multiaddr-net"
 	ma "github.com/multiformats/go-multiaddr"
+	manet "github.com/multiformats/go-multiaddr/net"
 )
 
 type Opts struct {
@@ -24,7 +24,6 @@ type ConnErr struct {
 // ListenPipe listens on both multiaddrs, accepts one connection each,
 // and pipes them to each other.
 func ListenPipe(ctx cxt.Context, l1, l2 ma.Multiaddr, o Opts) error {
-
 	list1, err := Listen(l1)
 	if err != nil {
 		return err

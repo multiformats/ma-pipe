@@ -17,7 +17,7 @@ type Trace struct {
 
 func OpenTraceFiles(t *Trace, dir string) error {
 	// first, attempt mkdir -p.
-	err := os.MkdirAll(dir, os.FileMode(0755))
+	err := os.MkdirAll(dir, os.FileMode(0o755))
 	if err != nil {
 		return err
 	}
@@ -52,8 +52,10 @@ func OpenTraceFiles(t *Trace, dir string) error {
 	return nil
 }
 
-var TraceFilenameFmt = "ma-pipe-trace-<date>-<pid>-<direction>"
-var TraceFilenameDateFmt = "2006-01-02-15:04:05Z"
+var (
+	TraceFilenameFmt     = "ma-pipe-trace-<date>-<pid>-<direction>"
+	TraceFilenameDateFmt = "2006-01-02-15:04:05Z"
+)
 
 func NewTraceFilenames() (string, string, string) {
 	date := time.Now().Format(TraceFilenameDateFmt)
