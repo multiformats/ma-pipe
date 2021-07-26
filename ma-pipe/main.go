@@ -152,7 +152,7 @@ func catchSigPipe(ctx cxt.Context, trace *mapipe.Trace) cxt.Context {
 }
 
 func runMode(trace *mapipe.Trace, opts Opts) error {
-	o := mapipe.Opts{Trace:trace, MaxBW: opts.Bandwidth, Kill: nil}
+	o := mapipe.Opts{Trace: trace, MaxBW: opts.Bandwidth, Kill: nil}
 
 	// setup the kill channel for the pipe. This kill channel solves the following problem:
 	// when SIGPIPE is sent, the output cuts and we do not have a graceful exit. This enables
