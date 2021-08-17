@@ -1,6 +1,6 @@
 module github.com/multiformats/ma-pipe
 
-go 1.15
+go 1.16
 
 require (
 	github.com/dustin/go-humanize v1.0.0
