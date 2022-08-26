@@ -6,7 +6,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/signal"
 	"syscall"
@@ -195,8 +194,8 @@ func run() error {
 
 		trace := &mapipe.Trace{
 			CW: os.Stderr,
-			AW: ioutil.Discard,
-			BW: ioutil.Discard,
+			AW: io.Discard,
+			BW: io.Discard,
 		}
 
 		if opts.Tee {
